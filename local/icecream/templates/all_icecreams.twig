@@ -1,0 +1,15 @@
+{{ header()|raw }}
+<h2>{{ trans('pluginname', 'local_icecream') }}</h2>
+<div>
+    <ul>
+        {% for icecream in icecreams %}
+            <li>{{ icecream.title }}&nbsp;(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</li>
+        {% else %}
+            <li>No icecreams <strong>:(</strong></li>
+        {% endfor %}
+    </ul>
+    {% if isloggedin() %}
+        <a href="{{ url('user') }}">Your icecream preferences</a>
+    {% endif %}
+</div>
+{{ footer()|raw }}

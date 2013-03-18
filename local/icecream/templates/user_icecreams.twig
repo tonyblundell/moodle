@@ -1,0 +1,21 @@
+{{ header()|raw }}
+<h2>{{ trans('pluginname', 'local_icecream') }}</h2>
+<div>
+    {% if icecreams is empty %}
+        <div>No icecreams <strong>:(</strong></div>
+    {% else %}
+        <form action="{{ url('user') }}" method="post">
+            <input type="hidden" name="sesskey" value="{{ sesskey() }}"/>
+            <ul>
+                {% for icecream in icecreams %}
+                    <div>
+                        <input type="checkbox" name="user_icecreams[]"{% if icecream.id in user_icecreams %} checked="checked"{% endif %} value="{{ icecream.id }}"/>
+                        <span>{{ icecream.title }}</span>
+                    </div>
+                {% endfor %}
+            </ul>
+            <input type="submit" value="Submit"/>
+        </form>
+    {% endif %}
+</div>
+{{ footer()|raw }}

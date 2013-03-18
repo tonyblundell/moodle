@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/icecream/db" VERSION="20130318" COMMENT="XMLDB file for Moodle local/icecream"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="local_icecream" COMMENT="Icecream flavours" NEXT="local_user_icecream">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="title" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="timecreated"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_user_icecream" COMMENT="User's favourite icecream flavours" PREVIOUS="local_icecream">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="icecreamid"/>
+        <FIELD NAME="icecreamid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="userid"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="primary" NEXT="icecreamid"/>
+        <KEY NAME="icecreamid" TYPE="foreign" FIELDS="icecreamid" REFTABLE="local_icecream" REFFIELDS="id" PREVIOUS="userid"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

@@ -1,0 +1,18 @@
+{{ adminpage('local_icecream_manage') }}
+{{ header()|raw }}
+<h2>{{ trans('pluginname', 'local_icecream') }}</h2>
+<div>
+    <ul>
+        {% for icecream in icecreams %}
+            <li>
+                <span>{{ icecream.title }}</span>&nbsp<span>(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</span>
+                <a href="{{ url('update', {id: icecream.id}) }}">({{ trans('edit') }})</a>
+                <a href="{{ url('delete', {id: icecream.id}) }}?sesskey={{ sesskey() }}">({{ trans('delete') }})</a>
+            </li>
+        {% else %}
+            <li>No icecreams <strong>:(</strong></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url('create') }}">{{ trans('add') }}</a>
+</div>
+{{ footer()|raw }}
