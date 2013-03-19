@@ -55,6 +55,7 @@ class icecream_model {
      */
     public function delete($id) {
         global $DB;
+        $DB->delete_records('local_user_icecream', array('icecreamid' => $id));
         $DB->delete_records('local_icecream', array('id' => $id));
     }
 
