@@ -1,6 +1,6 @@
 {{ adminpage('local_icecream_manage') }}
 {{ header()|raw }}
-<h2>{{ trans('pluginname', 'local_icecream') }}</h2>
+<h2>{{ trans('pluginname', plugin) }}</h2>
 <div>
     <ul>
         {% for icecream in icecreams %}
@@ -10,7 +10,7 @@
                 <a href="{{ url('delete', {id: icecream.id}) }}?sesskey={{ sesskey() }}">({{ trans('delete') }})</a>
             </li>
         {% else %}
-            <li>No icecreams <strong>:(</strong></li>
+            <li>{{ trans('no_icecreams', plugin) }}&nbsp;<strong>:(</strong></li>
         {% endfor %}
     </ul>
     <a href="{{ url('create') }}">{{ trans('add') }}</a>

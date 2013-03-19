@@ -18,14 +18,20 @@ $app->get('/', function() use ($app) {
     global $PAGE;
     $PAGE->set_pagelayout('standard');
     $model = new icecream_model();
-    return $app['twig']->render('all_icecreams.twig', array('icecreams' => $model->all()));
+    return $app['twig']->render('all_icecreams.twig', array(
+        'plugin' => 'local_icecream',
+        'icecreams' => $model->all(),
+    ));
 });
 
 // route accessible by admins allowing CRUD operations on icecream flavours
 $app->get('/manage', function() use ($app) {
     require_capability('moodle/site:config', context_system::instance());
     $model = new icecream_model();
-    return $app['twig']->render('manage_icecreams.twig', array('icecreams' => $model->all()));
+    return $app['twig']->render('manage_icecreams.twig', array(
+        'plugin' => 'local_icecream',
+        'icecreams' => $model->all(),
+    ));
 })->bind('manage');
 
 // route accessible by admins allowing an icecream to be created
@@ -42,7 +48,10 @@ $app->match('/create', function(Request $request) use ($app) {
         $model->save($form->get_data());
         redirect($app['url_generator']->generate('manage'), get_string('changessaved'));
     }
-    return $app['twig']->render('icecream_form.twig', array('form' => $form));
+    return $app['twig']->render('icecream_form.twig', array(
+        'plugin' => 'local_icecream',
+        'form' => $form,
+    ));
 })->bind('create');
 
 // route accessible by admins allowing an icecream to be updated
@@ -63,7 +72,10 @@ $app->match('/update/{id}', function(Request $request, $id) use ($app) {
         $model->save($formdata);
         redirect($app['url_generator']->generate('manage'), get_string('changessaved'));
     }
-    return $app['twig']->render('icecream_form.twig', array('form' => $form));
+    return $app['twig']->render('icecream_form.twig', array(
+        'plugin' => 'local_icecream',
+        'form' => $form,
+    ));
 })->bind('update');
 
 // route accessible by admins allowing an icecream to be deleted
@@ -89,6 +101,7 @@ $app->match('/user', function(Request $request) use ($app) {
         redirect($app['url_generator']->generate('user'), get_string('changessaved'));
     }
     return $app['twig']->render('user_icecreams.twig', array(
+        'plugin' => 'local_icecream',
         'icecreams' => $icecreams,
         'user_icecreams' => $user_icecreams,
     ));
