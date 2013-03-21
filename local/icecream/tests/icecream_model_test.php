@@ -39,6 +39,7 @@ class icecream_model_test extends advanced_testcase {
                 array(2, 3), // admin, Strawberry
             ),
         );
+        $this->resetAfterTest();
     }
 
     /**
@@ -76,7 +77,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_save_new() {
         global $DB;
-        $this->resetAfterTest();
         $before = $DB->count_records('local_icecream');
         $this->_cut->save((object)array('title' => 'Raspberry'));
         $after = $DB->count_records('local_icecream');
@@ -90,7 +90,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_save_existing() {
         global $DB;
-        $this->resetAfterTest();
         $vanilla = $this->_cut->get(2);
         $vanilla->title = 'Vanilla (renamed)';
         $before = $DB->count_records('local_icecream');
@@ -107,7 +106,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_delete() {
         global $DB;
-        $this->resetAfterTest();
         $before = $DB->count_records('local_icecream');
         $this->_cut->delete(1);
         $after = $DB->count_records('local_icecream');
@@ -119,7 +117,6 @@ class icecream_model_test extends advanced_testcase {
      * tests getting user icecreams
      */
     public function test_get_user_icecreams() {
-        $this->resetAfterTest();
         $this->loadDataSet($this->createArrayDataSet($this->_initial_user_icecream_data));
         $user_icecreams = $this->_cut->get_user_icecreams(2);
         $user_icecreams = array_map(function($icecreamid) {
@@ -134,7 +131,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_set_user_icecreams() {
         global $DB;
-        $this->resetAfterTest();
         $this->loadDataSet($this->createArrayDataSet($this->_initial_user_icecream_data));
         $before = $DB->count_records('local_user_icecream', array('userid' => 2));
         $this->_cut->set_user_icecreams(2, array(1, 3));
@@ -154,7 +150,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_add_user_icecream() {
         global $DB;
-        $this->resetAfterTest();
         $this->loadDataSet($this->createArrayDataSet($this->_initial_user_icecream_data));
         $before = $DB->count_records('local_user_icecream', array('userid' => 2));
         $this->_cut->add_user_icecream(2, 4);
@@ -174,7 +169,6 @@ class icecream_model_test extends advanced_testcase {
      */
     public function test_remove_user_icecream() {
         global $DB;
-        $this->resetAfterTest();
         $this->loadDataSet($this->createArrayDataSet($this->_initial_user_icecream_data));
         $before = $DB->count_records('local_user_icecream', array('userid' => 2));
         $this->_cut->remove_user_icecream(2, 3);

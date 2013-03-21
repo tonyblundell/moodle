@@ -2,15 +2,6 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-// enable Twig service provider
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => dirname(__FILE__) . '/templates',
-    'twig.options' => array(
-        'cache' => empty($CFG->disable_twig_cache) ? "{$CFG->dataroot}/twig_cache" : false,
-        'auto_reload' => debugging('', DEBUG_MINIMAL),
-    ),
-));
-
 // wrapper around Moodle's get_string() function
 $function = new Twig_SimpleFunction('trans', function($identifier, $component = '', $a = null) {
     return s(get_string($identifier, $component, $a));

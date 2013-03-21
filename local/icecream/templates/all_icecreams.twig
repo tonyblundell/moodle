@@ -3,9 +3,9 @@
 <div>
     <ul>
         {% for icecream in icecreams %}
-            <li>{{ icecream.title }}&nbsp;(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</li>
+            <li class="icecream">{{ icecream.title }}&nbsp;(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</li>
         {% else %}
-            <li>{{ trans('no_icecreams', plugin) }}&nbsp;<strong>:(</strong></li>
+            <li class="icecream">{{ trans('no_icecreams', plugin) }}&nbsp;<strong>:(</strong></li>
         {% endfor %}
     </ul>
     {% if isloggedin() %}
