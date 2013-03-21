@@ -54,7 +54,9 @@ if (file_exists(__DIR__.'/../../../../vendor/autoload.php')) {
 
 // Verify PHPUnit libs can be loaded.
 if (!include_once('PHPUnit/Autoload.php')) {
+    /*
     phpunit_bootstrap_error(PHPUNIT_EXITCODE_PHPUNITMISSING);
+    */
 }
 
 if ($options['run']) {
