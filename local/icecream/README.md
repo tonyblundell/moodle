@@ -2,7 +2,7 @@
 
 ## Introduction
 
-It is difficult to write loosely coupled, elegant, maintainable, testable Moodle plugins. Moodle development tends to be freestyle, with each Moodle coder bringing their own idioms and coding styles to the table. In a large project with several contributors, this can become unwieldy. Moodle is very monolithic and tends not to have any separation of concerns. Business logic, database access, http request handling code and html templating often tightly coupled together in one long, untestable PHP file.
+It is difficult to write loosely coupled, elegant, maintainable, testable Moodle plugins. Moodle development tends to be freestyle, with each Moodle coder bringing their own idioms and coding styles to the table. In a large project with several contributors, this can become unwieldy. Moodle is very monolithic and tends not to have any separation of concerns. Business logic, database access, http request handling code and html templating are often tightly coupled together in one long, untestable PHP file.
 
 This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectify the above by using:
 
