@@ -5,7 +5,7 @@
     <ul>
         {% for icecream in icecreams %}
             <li class="icecream">
-                <span>{{ icecream.title }}</span>&nbsp<span>(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</span>
+                <span>{{ icecream.title }}</span>&nbsp;<span>(created {{ icecream.timecreated|date('d/M/Y') }}, modified {{ icecream.timemodified|date('d/M/Y') }})</span>
                 <a href="{{ url('update', {id: icecream.id}) }}">({{ trans('edit') }})</a>
                 <a href="{{ url('delete', {id: icecream.id}) }}?sesskey={{ sesskey() }}">({{ trans('delete') }})</a>
             </li>
