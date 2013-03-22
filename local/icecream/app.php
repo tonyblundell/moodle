@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 require_once dirname(dirname(dirname(__FILE__))) . '/config.php';
 global $CFG;
 
-// require the icecream models and forms and bootstrap Silex and Twig
+// require the icecream model and form
 require_once dirname(__FILE__) . '/models/icecream_model.php';
 require_once dirname(__FILE__) . '/forms/icecream_form.php';
 
@@ -29,7 +29,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     ),
 ));
 
-// bring in Twig library functions
+// require Twig library functions
 require dirname(__FILE__) . '/twiglib.php';
 
 // unrestricted route showing all icecream flavours
