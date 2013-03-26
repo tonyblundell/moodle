@@ -35,6 +35,17 @@ This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectif
         ./vendor/phpunit/phpunit/composer/bin/phpunit icecream_model_test local/icecream/tests/icecream_model_test.php
         ./vendor/phpunit/phpunit/composer/bin/phpunit web_test local/icecream/tests/web_test.php
 
+## Standards
+
+* Set Silex's debugging setting to Moodle's debugging setting with `$app['debug'] = debugging('', DEBUG_MINIMAL);`
+* No HTTP request/response code outside `app.php`
+* No database access code (i.e. no use of `global $DB`) outside models in `/models`
+* No HTML templating outside [Twig](http://twig.sensiolabs.org/) templates in `/templates`
+* Use [`UrlGeneratorServiceProvider`](http://silex.sensiolabs.org/doc/providers/url_generator.html) to generate URLs from named routes (rather than hardcoding relative URLs)
+* Use [`SilexApplication::redirect`](http://silex.sensiolabs.org/api/Silex/Application.html#method_redirect) (rather than Moodle's `redirect()` which breaks web tests)
+* Use [`SilexApplication::match`](http://silex.sensiolabs.org/api/Silex/Application.html#method_match) to define a single route for `GET` and `POST` for form handling
+* `twiglib.php` is not plugin-specific and may be moved to `$CFG->dirroot` or `$CFG->libdir` if multiple plugins require it
+
 ## Routes
 
 The [Silex app](http://silex.sensiolabs.org/documentation) defines the following [routes](http://silex.sensiolabs.org/doc/usage.html#routing) (relative to `/local/icecream`):
@@ -45,4 +56,3 @@ The [Silex app](http://silex.sensiolabs.org/documentation) defines the following
 * `/update` - admin page showing a form for updating an existing icecream
 * `/delete` - admin route for deleting an existing icecream
 * `/user` - user page showing a form for stating icecream preferences
-
