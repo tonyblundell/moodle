@@ -38,13 +38,16 @@ This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectif
 ## Standards
 
 * Set Silex's debugging setting to Moodle's debugging setting with `$app['debug'] = debugging('', DEBUG_MINIMAL);`
+* Set Twig's path to `$CFG->dataroot/twig_cache`
+* Allow Twig's cache to be disabled by setting `$CFG->disable_twig_cache = true` in `config.php`
 * No HTTP request/response code outside `app.php`
 * No database access code (i.e. no use of `global $DB`) outside models in `/models`
-* No HTML templating outside [Twig](http://twig.sensiolabs.org/) templates in `/templates`
+* No HTML templating outside [Twig](http://twig.sensiolabs.org/) templates in `/templates` (or `$CFG->dirroot/twig_templates` if there are templates shared between plugins)
 * Use [`UrlGeneratorServiceProvider`](http://silex.sensiolabs.org/doc/providers/url_generator.html) to generate URLs from named routes (rather than hardcoding relative URLs)
 * Use [`SilexApplication::redirect`](http://silex.sensiolabs.org/api/Silex/Application.html#method_redirect) (rather than Moodle's `redirect()` which breaks web tests)
 * Use [`SilexApplication::match`](http://silex.sensiolabs.org/api/Silex/Application.html#method_match) to define a single route for `GET` and `POST` for form handling
 * `twiglib.php` is not plugin-specific and may be moved to `$CFG->dirroot` or `$CFG->libdir` if multiple plugins require it
+* Create a `README.md` (like this one!) in [markdown syntax](http://daringfireball.net/projects/markdown/syntax) to document non-trivial plugins
 
 ## Routes
 
