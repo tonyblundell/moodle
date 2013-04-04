@@ -76,7 +76,7 @@ class web_test extends advanced_testcase {
         $client = new Client($this->_app);
         $crawler = $client->request('GET', '/');
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertCount(count($this->_initial_icecream_data), $crawler->filter('li.icecream'));
+        $this->assertCount(count($this->_initial_icecream_data), $crawler->filter('ul li.icecream'));
         $content = $client->getResponse()->getContent();
         foreach ($this->_initial_icecream_data as $icecream) {
             $this->assertRegExp("/{$icecream}/", $content);
@@ -97,7 +97,7 @@ class web_test extends advanced_testcase {
         $client = new Client($this->_app);
         $crawler = $client->request('GET', '/manage');
         $this->assertTrue($client->getResponse()->isOk());
-        $this->assertCount(count($this->_initial_icecream_data), $crawler->filter('li.icecream'));
+        $this->assertCount(count($this->_initial_icecream_data), $crawler->filter('ul li.icecream'));
         $content = $client->getResponse()->getContent();
         foreach ($this->_initial_icecream_data as $icecream) {
             $this->assertRegExp("/{$icecream}/", $content);
