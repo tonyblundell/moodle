@@ -139,6 +139,10 @@ abstract class renderer_factory_base implements renderer_factory {
             }
         }
 
+        if (PHPUNIT_TEST) {
+            $target = null;
+        }
+
         switch ($target) {
             case RENDERER_TARGET_CLI: $suffix = '_cli'; break;
             case RENDERER_TARGET_AJAX: $suffix = '_ajax'; break;
