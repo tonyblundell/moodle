@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Backbone.js, jQuery Mobile, Require.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0/jquery.mobile-1.3.0.min.css" />
+    <script src="{{ base_url }}/js/external/require.js" data-main="{{ base_url }}/js/setup.js"></script>
+    <script>baseUrl = '{{ base_url }}';</script>
+    <script>apiUrl = '{{ api_url }}';</script>
+    <script>wstoken = '{{ wstoken }}';</script>
+</head>
+<body>
+
+<div id="id_page" data-role="page">
+    <div id="id_header" data-role="header">
+        {% block header %}
+            <h1>Page Title</h1>
+        {% endblock %}
+    </div>
+    <div id="id_content" data-role="content">
+        {% block content %}
+            <ul id="id_listview" data-role="listview" data-inset="true">
+            </ul>
+        {% endblock %}
+    </div>
+    <div id="id_footer" data-role="footer">
+        {% block footer %}
+            <h4>Page Footer</h4>
+        {% endblock %}
+    </div>
+</div>
+
+<script id="id_template_list" type="text/template">
+    <% _.each(models, function(model) { %>
+        <li><a href="#"><%- model.get('username') %></a></li>
+    <% }) %>
+</script>
+
+</body>
+</html>
