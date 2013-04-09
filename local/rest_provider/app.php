@@ -1,6 +1,8 @@
 <?php
 
-define('NO_MOODLE_COOKIES', true);
+if (!defined('NO_MOODLE_COOKIES')) {
+    define('NO_MOODLE_COOKIES', true);
+}
 
 // use the Request/Response classes
 use Symfony\Component\HttpFoundation\Request;
@@ -131,6 +133,9 @@ $app->put('/v1/user/{id}', function(Request $request, $id) use ($app) {
 $app->delete('/v1/user/{id}', function(Request $request, $id) use ($app) {
     global $DB;
     try {
+        if (!$DB->record_exists('user', array('id' => $id))) {
+            return new Response('', 404);
+        }
         $DB->delete_records('user', array('id' => $id));
         return new Response('', 204);
     } catch (Exception $e) {
