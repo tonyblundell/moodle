@@ -1,0 +1,13 @@
+<div data-role="page">
+    <div data-role="header">
+        <h1>Users</h1>
+    </div>
+    <div data-role="content">
+        <ul data-role="listview" data-inset="true">
+            <% _.each(models, function(model) { %>
+                <li><a href="#user/<%= model.get('id') %>"><%- model.get('firstname') %>&nbsp;<%- model.get('lastname') %></a></li>
+            <% }) %>
+        </ul>
+        <a href="#user" data-role="button" data-icon="plus" data-iconpos="left" data-theme="c" data-inline="true">New user</a>
+    </div>
+</div>

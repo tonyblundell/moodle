@@ -1,29 +1,43 @@
 require.config({
     // external script aliases
     paths: {
-        "jquery": "external/jquery-1.9.1",
-        "jquerymobile": "external/jquery.mobile-1.3.0",
-        "underscore": "external/underscore",
-        "backbone": "external/backbone"
+        'text': 'external/text',
+        'jquery': 'external/jquery-1.9.1',
+        'jquerymobile': 'external/jquery.mobile-1.3.1',
+        'underscore': 'external/underscore',
+        'backbone': 'external/backbone'
     },
 
     // Sets the configuration for your third party scripts that are not AMD compatible
     shim: {
-        "backbone": {
-            "deps": ["underscore", "jquery"],
-            "exports": "Backbone"  // attaches "Backbone" to the window object
+        'backbone': {
+            'deps': ['underscore', 'jquery'],
+            'exports': 'Backbone'  // attaches 'Backbone' to the window object
         }
     }
 });
 
-require(["jquery", "backbone"], function($, Backbone) {
-    // Set up the "mobileinit" handler before requiring jQuery Mobile's module
-    $(document).on("mobileinit", function() {
-        // Prevents all anchor click handling including the addition of active button state and alternate link blurring
+require(['jquery', 'backbone', 'app/routers/router'],
+function($, Backbone, Router) {
+    // set up the 'mobileinit' handler before requiring jQuery Mobile's module
+    $(document).on('mobileinit', function() {
+        // prevent all anchor click handling including the addition of active button state and alternate link blurring
         $.mobile.linkBindingEnabled = false;
 
-        // Disabling this will prevent jQuery Mobile from handling hash changes
+        // disabling this will prevent jQuery Mobile from handling hash changes
         $.mobile.hashListeningEnabled = false;
+
+        // disable other things as per http://coenraets.org/blog/2012/03/using-backbone-js-with-jquery-mobile/
+        $.mobile.ajaxEnabled = false;
+        $.mobile.pushStateEnabled = false;
+
+        // disable other things as per http://addyosmani.github.io/backbone-fundamentals/#backbone-jquery-mobile
+//        $.mobile.autoInitializePage = false;
+        $.mobile.page.prototype.options.domCache = false;
+
+        // enable some things as per http://addyosmani.github.io/backbone-fundamentals/#backbone-jquery-mobile
+        $.mobile.phonegapNavigationEnabled = true;
+        $.mobile.page.prototype.options.degradeInputs.date = true;
     });
 
     // send wstoken with every XHR
@@ -31,15 +45,21 @@ require(["jquery", "backbone"], function($, Backbone) {
         xhr.setRequestHeader('Authorization', 'Bearer ' + wstoken);
     });
 
-    require(["jquerymobile"], function() {
-        // empty
-    });
+    // workaround for jQuery balking at empty responses in POST, PATCH, DELETE
+    $.ajaxSetup({dataFilter: function(data, type) {
+        if (type == 'json' && data == '') {
+            data = null;
+        }
+        return data;
+    }});
 
-    require(["app/abstractcollection", "app/listview"], function(AbstractCollection, ListView) {
-        new ListView({
-            el: '#id_listview',
-            collection: new AbstractCollection()
-        });
+    // when jQM is available, initialize the router
+    require(['jquerymobile'], function() {
+        new Router({routes: {
+            '': 'home',
+            'user/:id': 'user',
+            'user': 'user'
+        }});
     });
 
 });

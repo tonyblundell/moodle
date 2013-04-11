@@ -1,0 +1,18 @@
+<div data-role="page">
+    <div data-role="header">
+        <h1>User</h1>
+    </div>
+    <div data-role="content">
+        <% _.each(['username', 'firstname', 'lastname', 'email'], function(field) { %>
+            <div data-role="fieldcontain">
+                <label for="id_<%= field %>"><%= field.charAt(0).toUpperCase() + field.slice(1) %>:</label>
+                <input id="id_<%= field %>" type="<%= field == 'email' ? 'email' : 'text' %>" value="<%- model.get(field) %>" data-clear-btn="true" placeholder="<%= field.charAt(0).toUpperCase() + field.slice(1) %>"/>
+            </div>
+        <% }) %>
+        <button id="id_cancel" data-icon="back" data-iconpos="left" data-theme="c" data-inline="true">Cancel</button>
+        <% if (!model.isNew()) { %>
+            <button id="id_delete" data-icon="delete" data-iconpos="left" data-theme="c" data-inline="true">Delete</button>
+        <% } %>
+        <button id="id_save" data-icon="check" data-iconpos="left" data-theme="c" data-inline="true">Save</button>
+    </div>
+</div>
