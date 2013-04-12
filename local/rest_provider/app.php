@@ -20,14 +20,18 @@ $app['debug'] = debugging('', DEBUG_MINIMAL);
 // enable UrlGenerator service provider
 $app->register(new Silex\Provider\UrlGeneratorServiceProvider());
 
-// authentication middleware
+// XHR verification middleware
 $app->before(function(Request $request) use ($app) {
-    global $DB;
     if (!$request->isXmlHttpRequest()) {
         return new Response(json_encode((object)array('error' => get_string('accessexception', 'webservice'))), 403, array(
             'Content-Type' => 'application/json',
         ));
     }
+});
+
+// authentication middleware
+$app->before(function(Request $request) use ($app) {
+    global $DB;
 
     // needs the following line/entry in .htaccess in order to pick up the 'Authorization' request header
     // RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
