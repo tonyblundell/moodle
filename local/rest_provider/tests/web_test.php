@@ -189,10 +189,12 @@ class web_test extends advanced_testcase {
         // load wstoken dataset
         $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
 
-        // create a couple of users
+        // create some users
+        $count = 5;
         $users = array();
-        $users[] = $this->getDataGenerator()->create_user();
-        $users[] = $this->getDataGenerator()->create_user();
+        foreach (range(0, $count - 1) as $i) {
+            $users[] = $this->getDataGenerator()->create_user();
+        }
 
         // request the collection
         $client = new Client($this->_app);
@@ -202,16 +204,22 @@ class web_test extends advanced_testcase {
         ));
         $this->assertTrue($client->getResponse()->isOk());
         $content = json_decode($client->getResponse()->getContent());
-        $this->assertCount(2, $users);
-        $this->assertCount(2, $content);
+        $this->assertCount($count, $users);
+        $this->assertCount($count, $content);
 
-        // test the JSON response
-        foreach ($content as $key => $user) {
-            $this->assertEquals($user->id, $users[$key]->id);
-            $this->assertSame($user->username, $users[$key]->username);
-            $this->assertSame($user->firstname, $users[$key]->firstname);
-            $this->assertSame($user->lastname, $users[$key]->lastname);
-            $this->assertSame($user->email, $users[$key]->email);
+        // for each created user, ensure it exists in the JSON response
+        for ($i = 0; $i < $count; ++$i) {
+            $exists = false;
+            for ($j = 0; $j < $count; ++$j) {
+                if ($content[$j]->id == $users[$i]->id) {
+                    $exists = true;
+                    $this->assertSame($content[$j]->username, $users[$i]->username);
+                    $this->assertSame($content[$j]->firstname, $users[$i]->firstname);
+                    $this->assertSame($content[$j]->lastname, $users[$i]->lastname);
+                    $this->assertSame($content[$j]->email, $users[$i]->email);
+                }
+            }
+            $this->assertTrue($exists);
         }
     }
 
