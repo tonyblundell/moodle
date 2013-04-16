@@ -95,6 +95,94 @@ class web_test extends advanced_testcase {
     }
 
     /**
+     * tests requesting the home route with a deleted user
+     */
+    public function test_home_route_with_deleted_user() {
+        global $DB;
+
+        // load wstoken dataset
+        $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
+        $DB->set_field('user', 'deleted', 1, array('id' => 2));
+
+        // request the collection
+        $client = new Client($this->_app);
+        $client->request('GET', self::API, array(), array(), array(
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_AUTHORIZATION' => 'Bearer ' . self::WSTOKEN,
+        ));
+        $response = $client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
+        $content = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(get_string('accessexception', 'webservice'), $content->error);
+    }
+
+    /**
+     * tests requesting the home route with a suspended user
+     */
+    public function test_home_route_with_suspended_user() {
+        global $DB;
+
+        // load wstoken dataset
+        $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
+        $DB->set_field('user', 'suspended', 1, array('id' => 2));
+
+        // request the collection
+        $client = new Client($this->_app);
+        $client->request('GET', self::API, array(), array(), array(
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_AUTHORIZATION' => 'Bearer ' . self::WSTOKEN,
+        ));
+        $response = $client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
+        $content = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(get_string('accessexception', 'webservice'), $content->error);
+    }
+
+    /**
+     * tests requesting the home route with an unconfirmed user
+     */
+    public function test_home_route_with_unconfirmed_user() {
+        global $DB;
+
+        // load wstoken dataset
+        $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
+        $DB->set_field('user', 'confirmed', 0, array('id' => 2));
+
+        // request the collection
+        $client = new Client($this->_app);
+        $client->request('GET', self::API, array(), array(), array(
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_AUTHORIZATION' => 'Bearer ' . self::WSTOKEN,
+        ));
+        $response = $client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
+        $content = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(get_string('accessexception', 'webservice'), $content->error);
+    }
+
+    /**
+     * tests requesting the home route with a user with an auth method of 'nologin'
+     */
+    public function test_home_route_with_nologin_user() {
+        global $DB;
+
+        // load wstoken dataset
+        $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
+        $DB->set_field('user', 'auth', 'nologin', array('id' => 2));
+
+        // request the collection
+        $client = new Client($this->_app);
+        $client->request('GET', self::API, array(), array(), array(
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_AUTHORIZATION' => 'Bearer ' . self::WSTOKEN,
+        ));
+        $response = $client->getResponse();
+        $this->assertEquals(403, $response->getStatusCode());
+        $content = json_decode($client->getResponse()->getContent());
+        $this->assertEquals(get_string('accessexception', 'webservice'), $content->error);
+    }
+
+    /**
      * tests the / route
      */
     public function test_home_route() {

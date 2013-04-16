@@ -37,14 +37,31 @@ $app->before(function(Request $request) use ($app) {
     // RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
     $wstoken = trim(substr($request->headers->get('Authorization'), strlen('Bearer ')));
 
-    if (!$token = $DB->get_record('external_tokens', array('token' => $wstoken, 'tokentype' => EXTERNAL_TOKEN_PERMANENT))) {
+    // try to fetch the token
+    $token = $DB->get_record('external_tokens', array('token' => $wstoken, 'tokentype' => EXTERNAL_TOKEN_PERMANENT));
+    if (empty($token)) {
         return new Response(json_encode((object)array('error' => get_string('accessexception', 'webservice'))), 403, array(
             'Content-Type' => 'application/json',
         ));
     }
 
+    // check the token's validity
     if ($token->validuntil && $token->validuntil < time()) {
         $DB->delete_records('external_tokens', array('token' => $wstoken, 'tokentype' => EXTERNAL_TOKEN_PERMANENT));
+        return new Response(json_encode((object)array('error' => get_string('accessexception', 'webservice'))), 403, array(
+            'Content-Type' => 'application/json',
+        ));
+    }
+
+    // get the (non-deleted, confirmed, non-suspended) user corresponding to the validated token
+    $user = $DB->get_record_select(
+        'user',
+        'id = ? AND deleted = ? AND confirmed = ? AND suspended = ? AND auth != ?',
+        array($token->userid, 0, 1, 0, 'nologin'),
+        '*',
+        IGNORE_MISSING
+    );
+    if (empty($user)) {
         return new Response(json_encode((object)array('error' => get_string('accessexception', 'webservice'))), 403, array(
             'Content-Type' => 'application/json',
         ));
