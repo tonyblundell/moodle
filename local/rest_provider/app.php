@@ -67,8 +67,30 @@ $app->before(function(Request $request) use ($app) {
         ));
     }
 
+    // fake a login
+    session_set_user($user);
+
     // log token access
     $DB->set_field('external_tokens', 'lastaccess', time(), array('id' => $token->id));
+});
+
+// get user details of user making the request (including 'admin')
+$app->get('/v1/user/current', function(Request $request) use ($app) {
+    global $USER, $DB;
+    try {
+        $sql = "SELECT id, username, firstname, lastname, email FROM {user} WHERE id = :id AND username NOT IN ('guest') AND deleted = 0";
+        $user = $DB->get_record_sql($sql, array('id' => $USER->id), MUST_EXIST);
+        $user->id = (integer)$user->id;
+        return new Response(json_encode((object)$user), 200, array(
+            'Content-Type' => 'application/json',
+        ));
+    } catch (dml_missing_record_exception $e) {
+        return new Response('', 404);
+    } catch (dml_multiple_records_exception $e) {
+        return new Response('', 404);
+    } catch (Exception $e) {
+        return new Response(json_encode((object)array('error' => $e->getMessage())), 500);
+    }
 });
 
 // get a single non-guest, non-admin, non-deleted user

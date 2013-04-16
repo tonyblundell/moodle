@@ -183,6 +183,30 @@ class web_test extends advanced_testcase {
     }
 
     /**
+     * tests the current user route returns user information about the user making the request
+     */
+    public function test_current_user_route() {
+        global $USER;
+
+        // load wstoken dataset
+        $this->loadDataSet($this->createArrayDataSet($this->_wstoken_dataset));
+
+        // request the collection
+        $client = new Client($this->_app);
+        $client->request('GET', self::API . '/current', array(), array(), array(
+            'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest',
+            'HTTP_AUTHORIZATION' => 'Bearer ' . self::WSTOKEN,
+        ));
+        $this->assertTrue($client->getResponse()->isOk());
+        $content = json_decode($client->getResponse()->getContent());
+        $this->assertEquals($USER->id, $content->id);
+        $this->assertSame($USER->username, $content->username);
+        $this->assertSame($USER->firstname, $content->firstname);
+        $this->assertSame($USER->lastname, $content->lastname);
+        $this->assertSame($USER->email, $content->email);
+    }
+
+    /**
      * tests the / route
      */
     public function test_home_route() {
