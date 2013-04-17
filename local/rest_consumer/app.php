@@ -26,9 +26,9 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->get('/', function() use ($app) {
     global $CFG;
     return $app['twig']->render('launch.twig', array(
+        'login_url' => $CFG->wwwroot . '/login/token.php',
         'base_url' => $CFG->wwwroot . '/local/rest_consumer',
         'api_url' => $CFG->wwwroot . '/local/rest_provider/v1/user',
-        'wstoken' => 'a62314890a9af4f20b6aae7380553f42',
     ));
 });
 

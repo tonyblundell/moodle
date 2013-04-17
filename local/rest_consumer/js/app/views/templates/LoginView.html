@@ -1,0 +1,16 @@
+<div data-role="page">
+    <div data-role="header">
+        <h1>Login</h1>
+    </div>
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label <% if (incorrect) { %>class="error" <% } %>for="id_username">Username:</label>
+            <input id="id_username" type="text" value="" data-clear-btn="true" placeholder="Username"/>
+        </div>
+        <div data-role="fieldcontain">
+            <label <% if (incorrect) { %>class="error" <% } %>for="id_password">Password:</label>
+            <input id="id_password" type="password" value="" data-clear-btn="true" placeholder="Password"/>
+        </div>
+        <button id="id_ok" data-icon="forward" data-iconpos="left" data-theme="c" data-inline="true">OK</button>
+    </div>
+</div>

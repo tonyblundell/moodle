@@ -17,7 +17,7 @@ require.config({
     }
 });
 
-require(['jquery', 'backbone', 'app/routers/router'],
+require(['jquery', 'backbone', 'app/routers/Router'],
 function($, Backbone, Router) {
     // set up the 'mobileinit' handler before requiring jQuery Mobile's module
     $(document).on('mobileinit', function() {
@@ -40,11 +40,6 @@ function($, Backbone, Router) {
         $.mobile.page.prototype.options.degradeInputs.date = true;
     });
 
-    // send wstoken with every XHR
-    $(document).ajaxSend(function(event, xhr) {
-        xhr.setRequestHeader('Authorization', 'Bearer ' + wstoken);
-    });
-
     // workaround for jQuery balking at empty responses in POST, PATCH, DELETE
     $.ajaxSetup({dataFilter: function(data, type) {
         if (type == 'json' && data == '') {
@@ -56,7 +51,8 @@ function($, Backbone, Router) {
     // when jQM is available, initialize the router
     require(['jquerymobile'], function() {
         new Router({routes: {
-            '': 'home',
+            '': 'login',
+            'home': 'home',
             'user/:id': 'user',
             'user': 'user'
         }});

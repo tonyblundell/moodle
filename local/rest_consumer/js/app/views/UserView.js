@@ -1,4 +1,4 @@
-define(['jquery', 'backbone', 'text!app/views/templates/userview.html'],
+define(['jquery', 'backbone', 'text!app/views/templates/UserView.html'],
 function($, Backbone, tpl) {
     return Backbone.View.extend({
         template: _.template(tpl),
