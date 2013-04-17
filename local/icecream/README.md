@@ -13,10 +13,12 @@ This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectif
 
 ## Install
 
-* git clone [the repository](https://github.com/mikemcgowan/moodle-icecream)
+* git clone [the repository](https://github.com/mikemcgowan/moodle)
+* git checkout [the icecream branch](https://github.com/mikemcgowan/moodle/tree/icecream)
 * install Moodle against the cloned codebase
 * login as admin and set [Moodle debugging](http://docs.moodle.org/24/en/Debugging) to at least `MINIMAL` (optional) 
 * in the `$CFG->dirroot` of the Moodle, have a look at `composer.json` to examine the dependencies
+* in the `$CFG->dirroot` of the Moodle, add [Composer](http://getcomposer.org) with `curl -s http://getcomposer.org/installer | php`
 * run `./composer.phar update` to install the dependencies
 * ensure Apache can read all the files in `/vendor` (e.g. with `chmod -R`)
 * requesting `/local/icecream` should display a list of icecreams
