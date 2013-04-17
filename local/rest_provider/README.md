@@ -36,11 +36,15 @@ This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectif
 
 ## Authentication
 
-A Moodle mobile web service token (wstoken) can be obtained by requesting `/login/token.php?username=myuser&password=secret&service=moodle_mobile_app` relative to the `$CFG->wwwroot` of the Moodle.
+A Moodle mobile web service token (**wstoken**) can be obtained by requesting:
 
-The wstoken returned by Moodle in the JSON response (e.g. `1a9dfa2fdca9210615361f36e23dd0ff`) must be sent in each HTTP request in header `Authorization` and set to `Bearer 1a9dfa2fdca9210615361f36e23dd0ff`.
+`/login/token.php?username=myuser&password=secret&service=moodle_mobile_app`
 
-The user to whom the wstoken belongs will be set as the session user for the duration of the http request meaning that any functionality that depends on `$USER->id` will be executed in the context of the user making the HTTP request.
+(Relative to the `$CFG->wwwroot` of the Moodle.)
+
+The **wstoken** returned by Moodle in the JSON response (e.g. `1a9dfa2fdca9210615361f36e23dd0ff`) must be sent in each HTTP request in header `Authorization` with value `Bearer 1a9dfa2fdca9210615361f36e23dd0ff`.
+
+The user to whom the **wstoken** belongs will be set as the session user for the duration of the HTTP request meaning that any functionality that depends on `$USER->id` will be executed as the user making the HTTP request.
  
 ## RESTful JSON API
 
