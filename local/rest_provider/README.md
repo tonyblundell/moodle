@@ -36,7 +36,7 @@ This [local plugin](http://docs.moodle.org/dev/Local_plugins) attempts to rectif
 
 ## Authentication
 
-A Moodle mobile web service token (**wstoken**) can be obtained by requesting:
+A Moodle mobile web service token **wstoken** can be obtained by requesting:
 
 `/login/token.php?username=myuser&password=secret&service=moodle_mobile_app`
 
