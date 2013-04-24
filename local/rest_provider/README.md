@@ -1,4 +1,4 @@
-# Moodle Restful
+# Moodle Restful (provider)
 
 ## Introduction
 
