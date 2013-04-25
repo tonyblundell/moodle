@@ -1,0 +1,11 @@
+{% if user_icecreams is empty %}
+    <div>No icecreams <strong>:(</strong></div>
+{% else %}
+    <ul>
+        {% for icecream in icecreams %}
+            {% if icecream.id in user_icecreams %}
+                <li><span style="color: #{{ icecream.colour }};">{{ icecream.title }}</span></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}
