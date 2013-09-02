@@ -20,7 +20,9 @@ $app['twig']->addFunction($function);
 $function = new Twig_SimpleFunction('header', function() {
     global $PAGE, $OUTPUT;
     $PAGE->set_context(context_system::instance());
-    return $OUTPUT->header();
+    $header = $OUTPUT->header();
+    ob_end_clean();
+    return $header;
 });
 $app['twig']->addFunction($function);
 
