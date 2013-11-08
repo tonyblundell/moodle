@@ -350,6 +350,111 @@ class core_enrol_external extends external_api {
      *
      * @return external_function_parameters
      */
+    public static function get_users_course_completions_parameters() {
+        return new external_function_parameters(
+            array(
+                'userid' => new external_value(PARAM_INT, 'user id'),
+            )
+        );
+    }
+
+    /**
+     * Get list of courses user is enrolled in (only active enrolments are returned) 
+     * and the course completion status.
+     * Please note the current user must be able to access the course, otherwise the course is not included.
+     *
+     * @param int $userid
+     * @return array of courses
+     */
+    public static function get_users_course_completions($userid) {
+        global $CFG, $USER, $DB;
+        require_once("{$CFG->libdir}/completionlib.php");
+
+        // Do basic automatic PARAM checks on incoming data, using params description
+        // If any problems are found then exceptions are thrown with helpful error messages
+        $params = self::validate_parameters(self::get_users_courses_parameters(), array('userid'=>$userid));
+
+        $courses = enrol_get_users_courses($params['userid'], true, 'id, shortname, fullname, idnumber, visible');
+        $result = array();
+
+        foreach ($courses as $course) {
+            $context = context_course::instance($course->id, IGNORE_MISSING);
+            try {
+                self::validate_context($context);
+            } catch (Exception $e) {
+                // current user can not access this course, sorry we can not disclose who is enrolled in this course!
+                continue;
+            }
+
+            if ($userid != $USER->id and !has_capability('moodle/course:viewparticipants', $context)) {
+                // we need capability to view participants
+                continue;
+            }
+
+            list($enrolledsqlselect, $enrolledparams) = get_enrolled_sql($context);
+            $enrolledsql = "SELECT COUNT('x') FROM ($enrolledsqlselect) enrolleduserids";
+            $enrolledusercount = $DB->count_records_sql($enrolledsql, $enrolledparams);
+
+            // Add completion counts
+            $info = new completion_info($course);
+            $completions = $info->get_completions($params['userid']);
+            $completions_total = count($completions);
+            $completions_completed = 0;
+            foreach($completions as $completion) {
+                if ($completion->is_complete()) {
+                    $completions_completed++;
+                }
+            }
+            $started = $completions_completed > 0 ? 1 : 0;
+            $completed = $completions_completed >= $completions_total ? 1 : 0;
+
+            $result[] = array(
+                'id'=>$course->id, 
+                'shortname'=>$course->shortname, 
+                'fullname'=>$course->fullname, 
+                'idnumber'=>$course->idnumber,
+                'visible'=>$course->visible, 
+                'enrolledusercount'=>$enrolledusercount, 
+                'completions_total'=>$completions_total,
+                'completions_completed'=>$completions_completed,
+                'started'=>$started,
+                'completed'=>$completed,
+            );
+        }
+
+        return $result;
+
+    }
+
+    /**
+     * Returns description of method result value
+     *
+     * @return external_description
+     */
+    public static function get_users_course_completions_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'id'        => new external_value(PARAM_INT, 'id of course'),
+                    'shortname' => new external_value(PARAM_RAW, 'short name of course'),
+                    'fullname'  => new external_value(PARAM_RAW, 'long name of course'),
+                    'enrolledusercount' => new external_value(PARAM_INT, 'Number of enrolled users in this course'),
+                    'idnumber'  => new external_value(PARAM_RAW, 'id number of course'),
+                    'visible'   => new external_value(PARAM_INT, '1 means visible, 0 means hidden course'),
+                    'completions_total' => new external_value(PARAM_INT, 'number of completable items'),
+                    'completions_completed' => new external_value(PARAM_INT, 'number of completed items'),
+                    'started' => new external_value(PARAM_INT, '1 means course has been started, 0 means it has not'), 
+                    'completed' => new external_value(PARAM_INT, '1 means course has been completed, 0 means it has not'),
+                )
+            )
+        );
+    }
+
+    /**
+     * Returns description of method parameters
+     *
+     * @return external_function_parameters
+     */
     public static function get_enrolled_users_parameters() {
         return new external_function_parameters(
             array(
