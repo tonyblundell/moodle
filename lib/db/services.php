@@ -494,6 +494,15 @@ $functions = array(
         'capabilities'=> 'moodle/course:viewparticipants',
     ),
 
+    'core_enrol_get_users_course_completions' => array(
+        'classname'   => 'core_enrol_external',
+        'methodname'  => 'get_users_course_completions',
+        'classpath'   => 'enrol/externallib.php',
+        'description' => 'Get the list of courses where a user is enrolled in and the completion status',
+        'type'        => 'read',
+        'capabilities'=> 'moodle/course:viewparticipants',
+    ),
+
     'core_enrol_get_course_enrolment_methods' => array(
         'classname'   => 'core_enrol_external',
         'methodname'  => 'get_course_enrolment_methods',
