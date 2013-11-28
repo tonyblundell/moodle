@@ -381,3 +381,8 @@ Notes on handling of multiple attempts:
 $string['whatgradedesc'] = 'Whether the highest, average (mean), first or last completed attempt is recorded in the gradebook if multiple attempts are allowed.';
 $string['width'] = 'Width';
 $string['window'] = 'Window';
+$string['mobilecompatability'] = 'Mobile compatability';
+$string['compatphone'] = 'Compatible with mobile phones';
+$string['compatphone_help'] = 'Controls availability of this SCORM content from within the Moodle Mobile app';
+$string['compattablet'] = 'Compatible with tablet';
+$string['compattablet_help'] = 'Controls availability of this SCORM content from within the Moodle Mobile app';

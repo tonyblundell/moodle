@@ -203,6 +203,24 @@ function xmldb_scorm_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2013110501, 'scorm');
     }
 
+
+    // MDL-41696 - Allow the admin to define if SCORM activities are mobile compatible
+    if ($oldversion < 2013112200) {
+        $table = new xmldb_table('scorm');
+
+        $field = new xmldb_field('compatphone', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, '0', 'completionscorerequired');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('compattablet', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, '0', 'compatphone');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2013112200, 'scorm');
+    }
+
     return true;
 }
 
