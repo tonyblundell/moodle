@@ -251,6 +251,15 @@ class mod_scorm_mod_form extends moodleform_mod {
         $mform->addHelpButton('auto', 'autocontinue', 'scorm');
         $mform->setDefault('auto', $cfgscorm->auto);
 
+        // Mobile compatability
+        $mform->addElement('header', 'mobilecompatabilityhdr', get_string('mobilecompatability', 'scorm'));
+        $mform->addElement('selectyesno', 'compatphone', get_string('compatphone', 'scorm'));
+        $mform->addHelpButton('compatphone', 'compatphone', 'scorm');
+        $mform->setDefault('compatphone', $cfgscrom->compatphone);
+        $mform->addElement('selectyesno', 'compattablet', get_string('compattablet', 'scorm'));
+        $mform->addHelpButton('compattablet', 'compattablet', 'scorm');
+        $mform->setDefault('compattablet', $cfgscrom->compattablet);
+
         // Hidden Settings.
         $mform->addElement('hidden', 'datadir', null);
         $mform->setType('datadir', PARAM_RAW);
