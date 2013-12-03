@@ -49,7 +49,10 @@ class mod_scorm_external extends external_api {
         require_once($CFG->dirroot . "/mod/scorm/locallib.php");
         $cm = get_coursemodule_from_id('scorm', $cmid, 0, true);
         $scorm = $DB->get_record('scorm', array('id'=>$cm->instance));
-        $attemptstatus = array();
+        $attemptstatus = array(
+            'id'    => $scorm->id,
+            'cmid'  => $cmid,
+        );
 
         // Num attempts allowed
         $attemptstatus['num_attempts_allowed'] = $scorm->maxattempt;
@@ -134,6 +137,8 @@ class mod_scorm_external extends external_api {
     public static function get_attempt_status_returns() {
         return new external_single_structure(
             array(
+                'id'                    => new external_value(PARAM_INT,    'Scorm ID'),
+                'cmid'                  => new external_value(PARAM_INT,    'Course module ID'),
                 'num_attempts_allowed'  => new external_value(PARAM_INT,    'Number of attempts allowed'),
                 'num_attempts_made'     => new external_value(PARAM_INT,    'Number of attempts made'),
                 'grading_method'        => new external_value(PARAM_TEXT,   'Grading method'),
