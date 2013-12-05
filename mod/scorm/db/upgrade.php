@@ -208,12 +208,12 @@ function xmldb_scorm_upgrade($oldversion) {
     if ($oldversion < 2013112200) {
         $table = new xmldb_table('scorm');
 
-        $field = new xmldb_field('compatphone', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, '0', 'completionscorerequired');
+        $field = new xmldb_field('compatphone', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, 0, 'completionscorerequired');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        $field = new xmldb_field('compattablet', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, '0', 'compatphone');
+        $field = new xmldb_field('compattablet', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, 0, 'compatphone');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
