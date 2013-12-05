@@ -32,6 +32,9 @@ class mod_feedback_external extends external_api {
                             ),
                             'page_after_submit' => new external_value(
                                 PARAM_RAW, 'Message to show after submission'
+                            ),
+                            'course' => new external_value(
+                                PARAM_INT, 'Id of course this feedback relates to'
                             )
                         )
                     )
@@ -73,6 +76,55 @@ class mod_feedback_external extends external_api {
         );
     }
 
+    /**
+     * Whether the specified user has got saved answers for the specified
+     * feedback as defined by the feedback_tracking table.
+     *
+     * @param int $userId     The user id to check
+     * @param int $feedbackId The feedback id to check for
+     *
+     * @return bool TRUE if feedback has already started, FALSE otherwise.
+     */
+    private static function _already_started($userId, $feedbackId) {
+        global $DB;
+
+        // Has the user already started this tracking?
+        $sql = <<< SQL
+SELECT feedback FROM mdl_feedback_tracking WHERE userid = ?
+SQL;
+        $alreadyStarted = $DB->get_records_sql($sql, array($userId));
+
+        return array_key_exists($feedbackId, $alreadyStarted);
+    }
+
+    /**
+     * Inserts sufficient information into the feedback_tracking table
+     * to specify a feedback as 'started'.
+     *
+     * @param int $userId     The user that is doing the feedback
+     * @param int $feedbackId The feedback that is to be started.
+     *
+     * @return bool TRUE if feedback is newly started, FALSE if there is already
+     *              a record for this user/feedback.
+     */
+    private static function _start_feedback($userId, $feedbackId) {
+        $response = true;
+
+        // Response will be false if the feedback tracking already exists.
+        $response = !(self::_already_started($userId, $feedbackId));
+
+        if ($response) {
+            $feedbackTrackingObj = new stdClass();
+            $feedbackTrackingObj->userid = $userId;
+            $feedbackTrackingObj->feedbackid = $feedbackId;
+            $DB->insert_record(
+                'feedback_tracking', $feedbackTrackingObj, false, false
+            );
+        }
+
+        return $response;
+    }
+
     public static function get_questions($courseModuleId) {
         global $DB;
 
@@ -96,16 +148,10 @@ SQL;
         $feedbackId = array_keys($instances);
         $feedbackId = $feedbackId[0];
 
-        // Has the user already started this tracking?
-        $sql = <<< SQL
-SELECT id, feedback FROM mdl_feedback_tracking WHERE userid = ?
-SQL;
-        $alreadyStarted = $DB->get_records_sql($sql, array($userId));
 
         $sql = <<<SQL
-SELECT id, name, intro, page_after_submit FROM mdl_feedback f WHERE f.id = ?
+SELECT id, course, name, intro, page_after_submit FROM mdl_feedback f WHERE f.id = ?
 SQL;
-
         $feedback = $DB->get_records_sql($sql, array($feedbackId));
 
         // Get the questions that we want.
@@ -124,9 +170,11 @@ SQL;
 
         // If the user has already started answering questions, grab their
         // existing answers too.
-        if (count(array_keys($alreadyStarted)) > 0) {
+        if (self::_already_started($userId, $feedbackId)) {
             $sql = <<<SQL
-SELECT fv.id, fv.item, fv.value WHERE fv.item IN (
+SELECT fv.id, fv.item, fv.value
+FROM mdl_feedback_value fv
+WHERE fv.item IN (
 SQL;
             $sql .= substr(str_repeat("?,", count($questionIds)), 0, -1);
             $sql .= <<<SQL
