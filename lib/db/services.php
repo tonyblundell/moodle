@@ -623,6 +623,14 @@ $functions = array(
         'capabilities'=> 'moodle/course:update,moodle/course:changecategory,moodle/course:changefullname,moodle/course:changeshortname,moodle/course:changeidnumber,moodle/course:changesummary,moodle/course:visibility',
     ),
 
+    'core_course_set_activity_completion' => array(
+        'classname'   => 'core_course_external',
+        'methodname'  => 'set_activity_completion',
+        'classpath'   => 'course/externallib.php',
+        'description' => 'Set activity completion',
+        'type'        => 'write'
+    ),
+
     // === course category related functions ===
 
     'core_course_get_categories' => array(

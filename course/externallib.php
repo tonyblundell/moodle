@@ -813,6 +813,52 @@ class core_course_external extends external_api {
     }
 
     /**
+     * Set activity completion parameters
+     *
+     * @return external_function_parameters
+     * @since Moodle 2.5
+     */
+    public static function set_activity_completion_parameters() {
+        return new external_function_parameters(
+            array(
+                'cmid'      => new external_value(PARAM_INT,    'Course module ID'),
+                'userid'    => new external_value(PARAM_INT,    'User ID'),
+                'completed' => new external_value(PARAM_BOOL,   'Completion status')
+            )
+        );
+    }
+
+    /**
+     * Set activity completion
+     *
+     * @param int $cmid
+     * @since Moodle 2.5
+     */
+    public static function set_activity_completion($cmid, $userid, $completed) {
+        global $CFG, $DB;
+        require_once($CFG->libdir.'/completionlib.php');
+        $cm = $DB->get_record('course_modules', array('id'=>$cmid));
+        $course = $DB->get_record('course', array('id'=>$cm->course));
+        $completion = new completion_info($course);
+        if ($cm->completion) {
+            $completion_param = $completed ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
+            $completion->update_state($cm, $completion_param, $userid);
+            return $completed;
+        }
+        throw new moodle_exception('completionnotenabled', 'completion');
+    }
+
+    /**
+     * Set activity completion returns
+     *
+     * @return external_description
+     * @since Moodle 2.5
+     */
+    public static function set_activity_completion_returns() {
+        return new external_value(PARAM_BOOL, 'Completion status');
+    }
+
+    /**
      * Returns description of method parameters
      *
      * @return external_function_parameters
