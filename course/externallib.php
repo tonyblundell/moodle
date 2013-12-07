@@ -144,6 +144,7 @@ class core_course_external extends external_api {
                         $module['modplural'] = $cm->modplural;
                         $module['modicon'] = $cm->get_icon_url()->out(false);
                         $module['indent'] = $cm->indent;
+                        $module['completion'] = $cm->completion;
 
                         $modcontext = context_module::instance($cm->id);
 
@@ -225,6 +226,7 @@ class core_course_external extends external_api {
                                     'availablefrom' => new external_value(PARAM_INT, 'module availability start date', VALUE_OPTIONAL),
                                     'availableuntil' => new external_value(PARAM_INT, 'module availability en date', VALUE_OPTIONAL),
                                     'indent' => new external_value(PARAM_INT, 'number of identation in the site'),
+                                    'completion' => new external_value(PARAM_BOOL, 'completion on/off'),
                                     'contents' => new external_multiple_structure(
                                           new external_single_structure(
                                               array(
